@@ -46,7 +46,7 @@ const Login = () => {
     const signUp = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/auth/createuser", {
+            await axios.post("https://login-signup-backend-lac.vercel.app/api/auth/createuser", {
                 name, email, username: userName, password
             })
                 .then(res => {
@@ -85,7 +85,7 @@ const Login = () => {
     const signIn = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/auth/login", {
+            await axios.post("https://login-signup-backend-lac.vercel.app/api/auth/login", {
                 username: userName, password
             })
                 .then(res => {
