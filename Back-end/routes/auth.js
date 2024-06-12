@@ -53,8 +53,8 @@ router.post('/createuser', [
 )
 
 router.post("/login", [
-    body('username', 'must be atleast 8 characters').isLength({ min: 8 }),
-    body('password', "Must be atleast 5 characters").isLength({ min: 5 })
+    body('username', 'must be atleast 8 characters').isLength({ min: 2 }),
+    body('password', "Must be atleast 5 characters").isLength({ min: 2 })
 ],
     async (req, res) => {
         let success = false;

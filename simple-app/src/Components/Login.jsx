@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import "./Login.css";
+import axios from "axios"
 import { useEffect } from 'react';
+import { Button, message, Space } from 'antd';
 const Login = () => {
     const handlelogin = () => {
         const container = document.getElementById('container-login');
@@ -12,16 +14,100 @@ const Login = () => {
         loginBtn.addEventListener('click', () => {
             container.classList.remove('active');
         });
-    };    
+    };
     useEffect(() => {
         handlelogin();
         return () => {
-            
+
         }
     }, [])
 
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [userName, setUserName] = useState('')
+
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success1 = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'This username has Sign Up Successfully',
+        });
+    };
+
+    const error1 = () => {
+        messageApi.open({
+            type: 'error',
+            content: 'This username is already been created',
+        });
+    };
+
+    const signUp = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post("http://localhost:5000/api/auth/createuser", {
+                name, email, username: userName, password
+            })
+                .then(res => {
+                    console.log(res);
+                    success1();
+                })
+                .catch(e => {
+                    console.log(e.response.data);
+                    if (e.response.data.Error) {
+                        // alert("This username is already been created");
+                        error1();
+                    }
+                })
+            
+        }
+        catch (e) {
+            console.log(e);
+
+        }
+    }
+
+    const success2 = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'Login is Successfull',
+        });
+    };
+
+    const error2 = () => {
+        messageApi.open({
+            type: 'error',
+            content: 'Login details are Wrong',
+        });
+    };
+
+    const signIn = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post("http://localhost:5000/api/auth/login", {
+                username: userName, password
+            })
+                .then(res => {
+                    console.log(res);
+                    success2();
+                })
+                .catch(e => {
+                    console.log(e.response.data);
+                    if (e.response.data.Error) {
+                        // alert("This username is already been created");
+                        error2();
+                    }
+                })
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <div className="container-login" id="container-login">
+            {contextHolder}
             <div className="form-container-login sign-up">
                 <form>
                     <h1>Create Account</h1>
@@ -32,10 +118,11 @@ const Login = () => {
                         <a href="#" className="icons-login"><i className="fa-brands fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your email to registration</span>
-                    <input type="text" placeholder="Name" />
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
-                    <button>Sign Up</button>
+                    <input type="text" onChange={(e) => { setName(e.target.value) }} placeholder="Name" />
+                    <input type="email" onChange={(e) => { setEmail(e.target.value) }} placeholder="Email" />
+                    <input type="userName" onChange={(e) => { setUserName(e.target.value) }} placeholder="userName" />
+                    <input type="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" />
+                    <button onClick={signUp}>Sign Up</button>
                 </form>
             </div>
             <div className="form-container-login sign-in">
@@ -48,10 +135,10 @@ const Login = () => {
                         <a href="#" className="icons-login"><i className="fa-brands fa-linkedin-in"></i></a>
                     </div>
                     <span>or use your email/password</span>
-                    <input type="email" placeholder="Email" />
-                    <input type="password" placeholder="Password" />
+                    <input type="userName" onChange={(e) => { setUserName(e.target.value) }} placeholder="userName" />
+                    <input type="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="Password" />
                     <a href="#">Forget your Password?</a>
-                    <button>Sign In</button>
+                    <button onClick={signIn}>Sign In</button>
                 </form>
             </div>
             <div className="toggle-container-login">
